@@ -1,7 +1,8 @@
 .git
 .github
+node_modules
 data
 .env
-node_modules
 docs
-*.png
+test
+index-screenshot-draft.png

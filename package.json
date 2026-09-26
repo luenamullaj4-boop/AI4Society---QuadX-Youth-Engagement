@@ -1,7 +1,7 @@
 {
-  "name": "elbasani-vepron",
-  "version": "0.1.0",
-  "description": "Youth volunteering platform for Elbasan Municipality: a map of hotspots where volunteers can show up.",
+  "name": "greenelb",
+  "version": "1.0.0",
+  "description": "GreenELB: youth environmental engagement platform for the Municipality of Elbasan (AI4Society hackathon, Track C).",
   "private": true,
   "type": "module",
   "license": "MIT",
@@ -11,6 +11,12 @@
   "scripts": {
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
-    "test": "node --test"
+    "demo": "node --env-file-if-exists=.env server/index.js",
+    "test": "node --test",
+    "icons": "node scripts/make-icons.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
+    "web-push": "^3.6.7"
   }
 }

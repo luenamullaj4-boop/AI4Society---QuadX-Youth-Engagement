@@ -2,21 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GreenELB Admin</title>
-<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GreenELB</title>
+<meta name="description" content="GreenELB: report hotspots, join cleanups and get recognized by the Municipality of Elbasan.">
+<meta name="theme-color" content="#1E5A3F">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/img/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="/css/app.css">
-<link rel="stylesheet" href="/css/admin.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script type="module" src="/js/admin/admin.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<script type="module" src="/js/main.js"></script>
 </head>
 <body>
-<div id="admin" class="admin"><p style="padding:40px">Loading…</p></div>
+<div class="app" id="app"><main class="view nonav"><div class="skeleton" style="height:120px"></div></main></div>
+<noscript>GreenELB needs JavaScript.</noscript>
 </body>
 </html>

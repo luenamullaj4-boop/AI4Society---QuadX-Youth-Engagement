@@ -17,8 +17,10 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
       - name: Check syntax
-        run: for f in server/*.js public/js/*.js test/*.js; do node --check "$f"; done
+        run: for f in $(find server public/js test scripts -name '*.js') public/sw.js; do node --check "$f"; done
       - name: Run tests
         run: node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=tap --test-reporter-destination=test-results.tap
       - name: Summarize failures

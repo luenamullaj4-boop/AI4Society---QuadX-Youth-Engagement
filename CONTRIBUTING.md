@@ -1,16 +1,15 @@
 # Contributing
 
-1. Create a branch from `main`: `git checkout -b feature/short-name`.
-2. Make your change. Keep the front end build-free (plain HTML, CSS and JS modules) and the server dependency-free unless the team agrees otherwise.
-3. Run `npm test` and check the page at phone width.
-4. Open a pull request and fill in the template.
+1. Branch from `main`: `git checkout -b feature/short-name`.
+2. `npm install`, copy `.env.example` to `.env`, then `npm run dev`.
+3. Keep the front end build-free (plain ES modules in `public/js`) and put every rule that affects points or verification on the server.
+4. Run `npm test` and check the youth app at 390 px wide (no horizontal scrolling).
+5. Open a pull request and fill in the template.
 
 ## Where things live
 
-- New hotspot fields: update `public/data/hotspots.json`, `server/validate.js` (if the youth office sets them), the list and detail views in `public/js/app.js`, and `docs/API.md`.
-- New categories or units: `public/js/config.js`. The server picks them up automatically.
-- Colours and fonts: the tokens at the top of `public/css/styles.css`. Update both the light and dark sets.
-
-## Code style
-
-Two-space indent, single quotes, semicolons, ES modules. `.editorconfig` sets the basics for most editors.
+- Categories, areas, quiz, points and phases: `public/js/config.js` (shared by server and browser).
+- Thresholds that the municipality can change: `DEFAULT_SETTINGS` in the same file, editable in Admin → Settings.
+- AI prompts and output schemas: `server/ai.js`. Fallback rules: `server/rules.js`.
+- Colors and components: `public/css/app.css` (design system from the spec, section 4).
+- Seed data: `server/seed.js`. Everything in it must stay made up.

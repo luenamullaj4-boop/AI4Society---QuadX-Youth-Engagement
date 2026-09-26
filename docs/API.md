@@ -1,93 +1,73 @@
 # API reference
 
-All endpoints are under `/api`, accept and return JSON, and send errors as:
-
-```json
-{ "error": "A sentence that explains what went wrong." }
-```
-
-Write requests (`POST`, `DELETE`) are rate limited to 30 per 10 minutes per IP address. Request bodies are limited to 10 KB and must be sent with `Content-Type: application/json`.
+JSON over HTTP. Signed-in requests send `Authorization: Bearer <token>`. Errors are `{ "error": "…" }` with a 4xx/5xx status. Photos are sent as `{ dataUrl, lat, lng, takenAt, source: "camera", ahash }`.
 
 ## Public
 
-### `GET /api/health`
-Returns `{ "ok": true, "mode": "live" }`. The front end uses this to choose between live and demo mode.
+| Method | Path | |
+| --- | --- | --- |
+| GET | `/api/health` | `{ ok, ai, demo }` |
+| GET | `/api/config` | Demo accounts (demo mode), leader minimum age |
+| GET | `/api/map` | Hotspots (not rejected) |
+| GET | `/api/hotspots/:id` | One hotspot |
+| GET | `/api/news` | Approved news |
+| GET | `/api/actions` | Open actions |
+| GET | `/api/actions/:id` | Action; with a token also `me`, "why it fits you", and leader-only lists |
+| GET | `/api/impact` | Public totals and cleaned sites |
+| GET | `/api/schools` | Pilot schools leaderboard |
+| GET | `/api/verify/:code` | Public passport or certificate (only what the user allows) |
+| GET | `/api/surveys` | Open surveys |
+| GET | `/api/photos/:id` | A stored photo |
+| GET | `/api/push/key` | VAPID public key |
 
-### `GET /api/stats`
-```json
-{ "open": 13, "signedUp": 102, "freeSpots": 129, "pendingReports": 0 }
-```
+## Account
 
-### `GET /api/hotspots`
-Optional query: `cat` (`env`, `heritage`, `social`, `edu`, `spaces`) and `urg` (`hi`, `mid`, `lo`).
+| Method | Path | |
+| --- | --- | --- |
+| POST | `/api/auth/signup` | Onboarding → `{ token, loginCode, user }` |
+| POST | `/api/auth/login` | `{ code }` → token |
+| POST | `/api/auth/staff` | `{ token: ADMIN_TOKEN }` → municipality session |
+| POST | `/api/auth/demo` | Demo accounts (demo mode only) |
+| POST | `/api/auth/logout` | |
+| GET / PATCH / DELETE | `/api/me` | Profile, update categories and privacy, delete account |
+| GET | `/api/me/export` | All my data |
+| GET | `/api/me/home` | Municipality Space: counts, AI recommendations, news, demand prompt, surveys |
+| POST | `/api/me/interest` | Demand signal |
+| GET | `/api/me/passport` | Green Passport |
+| GET | `/api/me/actions` | My actions |
+| POST | `/api/rewards/:id/redeem` | |
+| GET / POST | `/api/notifications`, `/api/notifications/read` | |
+| POST | `/api/push/subscribe` | |
+| POST | `/api/achievements/:id/seen`, `/api/surveys/:id/respond`, `/api/events` | |
 
-```json
-{
-  "hotspots": [
-    {
-      "id": "h1", "title": "Shkumbin riverbank clean-up", "unit": "Elbasan",
-      "cat": "env", "urg": "hi", "x": 392, "y": 340,
-      "when": "Sat 3 Oct · 09:00–12:00", "meet": "South end of Ura e Shkumbinit",
-      "need": 40, "have": 23, "bring": "…", "desc": "…"
-    }
-  ]
-}
-```
+## Reports
 
-`x` and `y` are positions on the 800 × 600 schematic map.
+| Method | Path | |
+| --- | --- | --- |
+| POST | `/api/reports` | `{ photo, category, problemType, description }` → `retake` / `rejected` / `confirmed` (duplicate within 50 m) / `needs_confirmation` / `ai_verified` |
+| POST | `/api/hotspots/:id/confirm` | `{ photo }` within 100 m |
+| GET | `/api/reports/mine` | |
 
-### `GET /api/hotspots/:id`
-Returns `{ "hotspot": { … } }` or `404`.
+## Actions
 
-### `POST /api/hotspots/:id/signups`
-Join a crew.
+| Method | Path | Who |
+| --- | --- | --- |
+| POST | `/api/actions/:id/offer` | Reporter: `{ accept }` |
+| POST | `/api/actions/:id/apply` | `{ motivation, availableOptionIds, availableDates }` |
+| POST / DELETE | `/api/actions/:id/join` | `{ optionIds }` |
+| POST | `/api/actions/:id/options` | Leader: `{ dates: [2–3 ISO dates] }` |
+| POST | `/api/actions/:id/supervisor` | Leader under 18 |
+| POST | `/api/actions/:id/withdraw` | Leader (deputy takes over) |
+| GET / POST | `/api/actions/:id/messages` | Members |
+| POST | `/api/actions/:id/safety`, `/start` | Leader |
+| GET | `/api/actions/:id/qr?kind=checkin|checkout` | Leader |
+| POST | `/api/actions/:id/scan` | `{ payload, lat, lng }` |
+| POST | `/api/actions/:id/photos` | Leader: `{ kind: before|after|bags, photo }` |
+| POST | `/api/actions/:id/finish` | Leader: `{ totalBags, kgPlastic, kgOther, treesPlanted }` → AI cleanup check, points, pickup |
+| POST | `/api/actions/:id/quiz` | +5 |
+| POST | `/api/actions/:id/datacard` | `{ bags, photo, items, localConcern }` |
+| POST | `/api/actions/:id/datacards/:cardId/confirm` | Leader: `{ agree }` |
 
-```json
-{ "name": "Arta", "email": "arta@example.com", "ageGroup": "18-29", "parentConsent": false }
-```
+## Admin (municipality)
 
-- `ageGroup` is `15-17` or `18-29`. For `15-17`, `parentConsent` must be `true`.
-- `409` if the crew is full or the email is already signed up for this action.
-
-Response `201`:
-```json
-{ "signup": { "id": "…", "cancelToken": "…" }, "hotspot": { …, "have": 24 } }
-```
-Keep `cancelToken`: it is the only way to leave the crew later.
-
-### `DELETE /api/signups/:id?token=CANCEL_TOKEN`
-Leave a crew. Returns the updated `hotspot`.
-
-### `POST /api/reports`
-Report a problem.
-
-```json
-{ "unit": "Shirgjan", "cat": "spaces", "desc": "Broken glass all over the basketball court.", "name": "Ilir" }
-```
-`unit` must be one of the 14 administrative units. `desc` is 10–600 characters. `name` is optional.
-Response `201`: `{ "report": { "id", "unit", "cat", "status": "pending", "createdAt" } }`
-
-### `GET /api/reports/:id`
-Check a report's status: `pending`, `approved` (with `hotspotId`) or `rejected`.
-
-## Youth office (admin)
-
-Send `Authorization: Bearer <ADMIN_TOKEN>`. Returns `401` with a wrong or missing token, `503` if the server has no `ADMIN_TOKEN` set.
-
-### `GET /api/admin/reports?status=pending`
-All reports, including the reporter's name. `status` is optional.
-
-### `POST /api/admin/reports/:id/approve`
-Turns a report into a public hotspot.
-
-```json
-{ "title": "Court clean-up in Shirgjan", "when": "Sat 17 Oct · 10:00", "meet": "School gate",
-  "need": 8, "urg": "mid", "bring": "Gloves", "desc": "…", "x": 455, "y": 440 }
-```
-`bring`, `desc`, `x` and `y` are optional; the pin defaults to the unit's position. Returns `{ report, hotspot }`.
-
-### `POST /api/admin/reports/:id/reject`
-Body `{ "reason": "Duplicate" }` (optional).
-
-### `GET /api/admin/signups?hotspot=h1`
-Active sign-ups with name, email, age group and consent. `hotspot` is optional.
+`/api/admin/overview`, `review`, `hotspots/:id/decision`, `actions/:id/cleanup-decision`, `datacards/:id/decision`, `leaders`, `actions/:id/rank`, `actions/:id/confirm-leader`, `demand`, `hotspots` (POST), `actions` (POST), `news` (GET/POST), `news/:id/approve`, `news/summarize` (PDF), `pickups`, `pickups/:id/status`, `indicators`, `schools`, `surveys` (GET/POST), `surveys/:id/close`, `rewards` (GET/POST/PATCH), `export/datacards.csv`, `settings` (GET/PATCH), `partners` (POST). Partners: `POST /api/partner/news`.

@@ -1,139 +1,146 @@
-# Elbasani Vepron
+# GreenELB
 
-**Youth volunteering on the map of Elbasan Municipality.**
-Built by team **QuadX** for the **AI4Society** hackathon.
+**Inform. Encourage. Recognize. Reward.** A youth environmental platform for the Municipality of Elbasan, Albania.
+Built by team **QuadX** for Track C of the **AI4Society Youth Innovation Hackathon** (Tirana, 25–27 September 2026).
 
 [![CI](https://github.com/luenamullaj4-boop/AI4Society---QuadX-Youth-Engagement/actions/workflows/ci.yml/badge.svg)](https://github.com/luenamullaj4-boop/AI4Society---QuadX-Youth-Engagement/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Elbasani Vepron ("Elbasan acts") shows young people aged 15–29 exactly where their help is needed across the 14 administrative units of Elbasan Municipality: a riverbank full of plastic on the Shkumbin, a village school that needs tutors, a road above Labinot-Mal where the next wildfire could spread. Pick a pin, claim a spot on the crew, show up.
+## The problem (Track C)
 
----
+Low youth participation in environmental initiatives in Elbasan, and no digital platform to encourage, recognize or reward it. The Municipality's own **Local Plan for Integrated Urban Solid Waste Management 2025–2030** says:
 
-## The problem
+- insufficient education and awareness is one of the main problems;
+- no recycling or composting is recorded, and a three-bin sorting pilot on main streets did not work;
+- only about 200,000 ALL (≈ €2,000) is budgeted for public awareness over two years, mostly for leaflets;
+- it calls for volunteers and students, incentive schemes, digital platforms and five pilot schools.
 
-- Young people in Elbasan want to help but don't know **where** or **when**. Volunteering calls are scattered across Facebook groups and school notice boards.
-- The municipality and NGOs know where the problems are, but have no simple way to **turn a problem into a crew** of volunteers with a date and a meeting point.
-- Villages outside the city (Gracen, Zavalinë, Funarë…) rarely get volunteers at all, because nobody sees what they need.
+## What GreenELB does
 
-## Our solution
-
-| For | What they get |
+| Need | How |
 | --- | --- |
-| **Volunteers (15–29)** | A map of every open action, filtered by cause and urgency. One-tap sign-up with the meeting point, what to bring and how many spots are left. |
-| **Residents** | A form to report a problem anywhere in the municipality. The report shows on the map as "awaiting review". |
-| **Municipal youth office** | A dashboard to approve reports into public actions, set crew size and urgency, and see who signed up. |
+| **Inform** | A Municipality Space with official news and a live map of environmental hotspots (OpenStreetMap). AI turns municipal PDFs into 5 easy cards. |
+| **Encourage** | Actions with a volunteer threshold ("7/10"), youth team leaders, personalized AI recommendations, demand signals ("10 young people in Tregan want a Climate activity"). |
+| **Recognize** | A Green Passport, verified personal data cards, certificates with a public verify page, shareable story cards. |
+| **Reward** | Server-side points with three phases (Recognition → Engagement → Young Leader) and a rewards catalog the municipality controls. |
 
-Safety is built in: volunteers aged 15–17 need a parent or guardian's agreement before they can join, and only the youth office sees contact details.
+**AI does the work the municipality has no staff for:** verifying reports from photos, verifying cleanups (before vs after), checking data cards, ranking team-leader applicants, personalizing the feed, filtering personal data, and summarizing documents.
 
-## Features
+## The core loop (under 3 minutes live)
 
-- Interactive schematic map of all 14 administrative units, with the Shkumbin river, main roads and terrain
-- Hotspots coloured by urgency (urgent / this month / ongoing), filterable by five causes: environment, heritage, neighbours, learning and public spaces
-- Crew sign-up with capacity limits, duplicate protection and cancellation
-- Citizen reports with status tracking (pending → approved / rejected)
-- Youth office dashboard at `/admin`, protected by an admin token
-- Works on phones, supports light and dark mode, keyboard accessible
-- **Two modes:** a full live app with the Node server, or a static demo on GitHub Pages with sample data saved in the visitor's browser
+1. A young person photographs a problem with the **in-app camera** (GPS + time captured, no gallery uploads).
+2. **AI checks the photo**: confidence ≥ 85 → published as "Verified by AI" (+20 points); 50–84 → dashed pin until 2 nearby people confirm with a photo or the municipality approves; < 50 → rejected with the reason. Photos with faces, plates or documents are never stored.
+3. The reporter is **offered the leader role** first (24 h), otherwise it becomes a public "Team leader wanted" call. The AI ranks applicants (anonymous ids), the municipality confirms, rank 2 becomes deputy.
+4. The leader sets 2–3 dates; volunteers join; the first date to reach the threshold is **confirmed**.
+5. Action day: safety checklist → rotating **QR check-in** (within 200 m) → before photo → QR check-out → after + bags photos → totals → automatic **pickup request**.
+6. Each member fills a **data card** (bags, photo, items); the leader confirms; the AI checks the photo, and code checks place, time and duplicates.
+7. **AI compares before and after**. Clean → hotspot turns green, everyone gets points (half if they stayed < 75%), certificates unlock, and the **achievement screen** offers story cards to share.
 
-## Quick start
+## Screens
 
-You need [Node.js](https://nodejs.org) 22 or newer. There are **no npm dependencies** to install.
+**Youth app** (mobile, 390 px): `/onboarding` · `/` Municipality Space · `/map` · `/report` · `/actions` · `/action/:id` · `/action/:id/apply-leader` · `/action/:id/manage` · `/action/:id/checkin` · `/action/:id/datacard` · `/profile` Green Passport · `/profile/privacy` · `/achievement/:id` · `/notifications` · public `/verify/:code` and `/impact`.
+
+**Municipality admin** (desktop, `/admin`): overview KPIs and sign-ups by source · needs review · leader confirmations · demand signals · map and hotspots · news, partner proposals and AI PDF summaries · pickup requests · Local Plan indicators · pilot schools leaderboard · surveys · rewards · CSV exports · QR posters · settings.
+
+## Run it
+
+Needs [Node.js](https://nodejs.org) 22 or newer.
 
 ```bash
 git clone https://github.com/luenamullaj4-boop/AI4Society---QuadX-Youth-Engagement.git
 cd AI4Society---QuadX-Youth-Engagement
-cp .env.example .env      # then set ADMIN_TOKEN to a long random value
+npm install
+cp .env.example .env    # set ADMIN_TOKEN and ANTHROPIC_API_KEY; DEMO_MODE=true for the pitch
 npm start
 ```
 
-Open:
-- http://localhost:3000 for the volunteer map
-- http://localhost:3000/admin for the youth office dashboard (enter your `ADMIN_TOKEN`)
+- Youth app: http://localhost:3000 (open it on a phone on the same Wi-Fi via your computer's IP, or deploy for HTTPS: the camera and GPS need HTTPS outside localhost)
+- Admin: http://localhost:3000/admin (sign in with `ADMIN_TOKEN`, or the demo button in demo mode)
 
-On first start the server copies the sample hotspots from `public/data/hotspots.json` into `data/db.json`. Delete `data/db.json` to reset the demo.
-
-Other commands:
+On first start the server creates `data/db.json` with made-up seed data (section 16 of the spec). Delete the `data/` folder to reset.
 
 ```bash
-npm run dev    # restart automatically when files change
-npm test       # run the API test suite
+npm test     # 25 end-to-end API tests with a fake AI
+npm run dev  # restart on file changes
 ```
 
-### Run with Docker
+### Demo mode
+
+`DEMO_MODE=true` shows made-up demo accounts (Arta K., Beni, Genti, Ersi, and the Municipality) on the sign-in screen, and adds a switch so the phone can use a location in Elbasan instead of its GPS, because the hackathon is in Tirana. The admin has **View as youth / View as Municipality**. Turn it off for real use.
+
+### Deploy
+
+Any Node host with a persistent disk works (Render, Railway, Fly.io, a VPS). With Docker:
 
 ```bash
-docker build -t elbasani-vepron .
-docker run -p 3000:3000 -e ADMIN_TOKEN=change-me -v vepron-data:/app/data elbasani-vepron
+docker build -t greenelb .
+docker run -p 3000:3000 --env-file .env -v greenelb-data:/app/data greenelb
 ```
-
-### Static demo on GitHub Pages
-
-The `public/` folder works on its own: without the server it switches to **demo mode** (sample data, sign-ups and reports stored only in the visitor's browser). To publish it:
-
-1. Repository **Settings → Pages → Source: GitHub Actions**.
-2. **Settings → Secrets and variables → Actions → Variables**, add `DEPLOY_PAGES` = `true`.
-3. Push to `main`. The demo appears at `https://luenamullaj4-boop.github.io/AI4Society---QuadX-Youth-Engagement/`.
 
 ## Configuration
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `PORT` | `3000` | Port the server listens on |
-| `ADMIN_TOKEN` | *(empty)* | Password for `/admin`. When empty, the dashboard is turned off. |
-| `DATA_FILE` | `data/db.json` | Where the JSON database is stored |
+| Variable | Purpose |
+| --- | --- |
+| `ADMIN_TOKEN` | Municipality staff sign-in. Empty = staff sign-in off. |
+| `ANTHROPIC_API_KEY` | Claude API key for the AI functions. Server-side only. |
+| `CLAUDE_MODEL` | Optional model override (default `claude-opus-5`). |
+| `DEMO_MODE` | `true` for demo accounts and the location override. |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | Web push. Generate with `npx web-push generate-vapid-keys`. |
+| `DATA_FILE` | Where the database lives (default `data/db.json`; photos go to `data/uploads/`). |
+| `PORT` | Default 3000. |
+
+Thresholds (verification confidence, radii, application windows, notification caps, `leader_min_age`, reward caps) are editable in **Admin → Settings**.
+
+## AI
+
+All AI runs on the server through the official Anthropic SDK (`claude-opus-5`, structured JSON output). Every result is **cached by a hash of its input**, so the same photo or text is never sent twice. **No names, emails or phone numbers are sent**: the AI sees ids, areas and categories, and free text is scrubbed first.
+
+| Function | What it decides |
+| --- | --- |
+| `checkReport` | Is it a real environmental problem? Confidence, category, waste types, size, volunteers and tools needed, urgency, safety, personal data |
+| `verifyCleanup` | Before vs after: is the site clean? Estimated kg and waste types |
+| `checkDatacard` | Does the member's photo show cleanup work? Estimated kg (place, time and duplicates are checked in code) |
+| `rankLeaders` | Scores leader applicants with a one-sentence reason each |
+| `recommend` | Top 3 actions for a user with a reason |
+| `privacyFilter` | Removes names, phone numbers, emails and addresses from text |
+| `summarizeDocument` | A municipal PDF (often in Albanian) → 5 English cards |
+| `quizType` | The onboarding quiz → The Doer / Storyteller / Organizer / Innovator |
+
+Without an API key everything still runs: reports wait for peer or municipal confirmation, cleanups go to municipal review, and rankings and recommendations use transparent rules (labelled "rule-based" in the UI).
+
+## Privacy by design
+
+Only a nickname (display name optional), age group, optional school, neighbourhood, categories and activity. No phone numbers. Location is saved only when taking a report photo or checking in. Users aged 16–17 are private with the nickname shown by default. Users can download all their data as JSON and delete their account (profile, activity and photos). The public verify page shows only what the user allows. All points and verification rules run on the server.
 
 ## Project structure
 
 ```
-├── public/                 Front end (static, no build step)
-│   ├── index.html          Volunteer landing page and map
-│   ├── admin.html          Youth office dashboard
-│   ├── css/styles.css      Design tokens, light + dark theme
-│   ├── js/config.js        Units, map geometry, categories (shared with the server)
-│   ├── js/api.js           Live API client with a demo-mode fallback
-│   ├── js/map.js           d3 map drawing and pins
-│   ├── js/app.js           Landing page logic
-│   ├── js/admin.js         Dashboard logic
-│   └── data/hotspots.json  Sample hotspots (seed data)
-├── server/                 Back end (Node.js, zero dependencies)
-│   ├── index.js            Entry point
-│   ├── app.js              Routes, static files, security headers, rate limit
-│   ├── store.js            JSON file database
-│   └── validate.js         Input validation
-├── test/api.test.js        API tests (node:test)
-├── docs/                   API reference, architecture, pitch
-├── .github/workflows/      CI tests and GitHub Pages deploy
-└── Dockerfile
+server/            Node.js API (no framework)
+  index.js         entry point, timers
+  app.js           routing and auth
+  routes/          public, me (account), reports, actions, admin
+  logic.js         points, phases, notifications, action state machine, QR tokens
+  ai.js            Claude functions with caching and fallbacks
+  rules.js         rule-based fallbacks and text scrubbing
+  db.js, seed.js   JSON database and made-up seed data
+public/            the PWA (plain ES modules, no build step)
+  app.html, admin.html, sw.js, manifest.webmanifest
+  js/screens/      youth app screens
+  js/admin/        admin dashboard
+  js/lib/          API client, router, camera/GPS/QR, map, share cards, UI helpers
+test/flow.test.js  end-to-end tests of the full loop
+docs/              API, architecture, pitch and demo script
 ```
 
-## Documentation
+## Docs
 
-- [API reference](docs/API.md)
+- [Pitch and live demo script](docs/PITCH.md)
 - [Architecture](docs/ARCHITECTURE.md)
-- [Pitch and demo script](docs/PITCH.md)
-- [Contributing](CONTRIBUTING.md)
+- [API reference](docs/API.md)
 
-## Tech stack
+## Next steps: 4-week pilot
 
-- **Front end:** HTML, CSS and vanilla JavaScript modules, [d3](https://d3js.org) for the map
-- **Back end:** Node.js built-in `http` module, JSON file storage
-- **Testing:** Node's built-in test runner
-- **CI/CD:** GitHub Actions (tests on Node 22 and 24, Pages deploy)
-
-## Roadmap
-
-- [ ] Real map tiles (Leaflet + OpenStreetMap) and official unit boundaries
-- [ ] Albanian / English language switch
-- [ ] Attendance check-in by the crew leader and downloadable volunteer-hour certificates
-- [ ] Email or SMS reminders the day before an action
-- [ ] Photo uploads on reports, before/after photos on completed actions
-- [ ] AI triage of incoming reports: suggest category, urgency and a title for the youth office to confirm
-- [ ] Move from the JSON file to SQLite or Postgres
-
-## Data and privacy
-
-The hotspots in this repository are **sample data** written for the demo, and the map is **schematic, not to scale**. Volunteer names and emails are stored only on the server, are never returned by public API routes, and are visible only to the youth office dashboard.
+A pilot with the Municipality of Elbasan and 2–3 schools or youth organizations: week 1 onboarding at the pilot schools, weeks 2–3 two cleanups per week from youth reports, week 4 review of the Local Plan indicators and rewards. The same setup can serve Tirana, Gjakova, Pristina and other municipalities.
 
 ## Team QuadX
 
@@ -146,4 +153,4 @@ The hotspots in this repository are **sample data** written for the demo, and th
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). All seed data (people, organisations, numbers) is made up.
