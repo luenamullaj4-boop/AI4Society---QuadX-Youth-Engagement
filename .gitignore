@@ -1,5 +1,5 @@
 # Runtime data (created by the server on first start)
-data/
+/data/
 
 # Secrets
 .env
