@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Elbasani Vepron</title>
+<meta name="description" content="Youth volunteering platform for Elbasan Municipality: find hotspots on the map and show up where help is needed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body>
+<div class="wrap">
+
+<nav>
+  <a class="brand" href="#top" aria-label="Elbasani Vepron home">
+    <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+      <rect x="1" y="1" width="32" height="32" rx="9" fill="var(--ink)"/>
+      <path d="M5 22 C11 18, 15 25, 21 20 S 27 17, 29 18" fill="none" stroke="var(--river-soft)" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="17" cy="12" r="5" fill="var(--sun)"/>
+    </svg>
+    Elbasani Vepron
+  </a>
+  <div class="navlinks">
+    <a href="#harta">Map</a>
+    <a href="#si">How it works</a>
+    <a href="#raporto">Report a hotspot</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div>
+    <p class="eyebrow">Rinia e Elbasanit · youth 15–29</p>
+    <h1 style="margin-top:14px">Your city has a to-do list. <span class="mark">Show&nbsp;up.</span></h1>
+    <p class="lede">Elbasani Vepron maps the places across the municipality where hands are needed right now: a riverbank full of plastic, a school that needs tutors, a village road where fire could spread. Pick a spot, join a crew, and log the hours for your school or university.</p>
+    <div class="ctas">
+      <a class="btn sun" href="#harta">Find a hotspot near you</a>
+      <a class="btn ghost" href="#raporto">Report a problem</a>
+    </div>
+  </div>
+  <div>
+    <div class="ledger" aria-label="This season at a glance">
+      <div><b id="statOpen">13</b><span>open actions this autumn</span></div>
+      <div><b id="statSpots">0</b><span>volunteer spots still free</span></div>
+      <div><b>14</b><span>administrative units covered</span></div>
+      <div><b id="statJoined">0</b><span>volunteers already signed up</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="harta">
+  <div class="sec-head">
+    <div>
+      <p class="eyebrow">Harta e veprimit · Action map</p>
+      <h2>Where Elbasan needs you</h2>
+      <p class="modepill" id="mode" aria-live="polite">Connecting…</p>
+    </div>
+    <p>Every pin is a job with a date, a meeting point and a crew size. Red pins are urgent. Tap one to see what to bring and to claim your spot.</p>
+  </div>
+
+  <div class="atlas">
+    <div class="mapbox" id="mapbox">
+      <svg id="map" viewBox="0 0 800 600" role="img" aria-labelledby="mapTitle">
+        <title id="mapTitle">Schematic map of Elbasan Municipality with volunteer hotspots</title>
+      </svg>
+      <div class="maptag">Bashkia Elbasan · 872 km²<br>41.11°N 20.08°E</div>
+      <div class="maplegend" aria-label="Legend">
+        <span><i class="dot" style="background:var(--hi)"></i>Urgent</span>
+        <span><i class="dot" style="background:var(--mid)"></i>This month</span>
+        <span><i class="dot" style="background:var(--lo)"></i>Ongoing</span>
+        <span><i class="dot" style="background:var(--surface);border:1.5px dashed var(--ink)"></i>Your report</span>
+      </div>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+
+    <div class="panel">
+      <div class="detail" id="detail" hidden aria-live="polite"></div>
+      <div class="filters">
+        <div class="chips" id="chips" role="group" aria-label="Filter by cause"></div>
+        <div class="filterrow">
+          <label for="urgency">Urgency
+            <select id="urgency">
+              <option value="all">Any</option>
+              <option value="hi">Urgent only</option>
+              <option value="mid">This month</option>
+              <option value="lo">Ongoing</option>
+            </select>
+          </label>
+          <span id="count"></span>
+        </div>
+      </div>
+      <ul class="list" id="list"><li class="empty">Loading hotspots…</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="si">
+  <div class="sec-head">
+    <div>
+      <p class="eyebrow">Si funksionon · How it works</p>
+      <h2>From scrolling to showing up in three steps</h2>
+    </div>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><h3>Find a spot</h3><p>Browse the map by neighbourhood or cause. Each hotspot is checked by the municipal youth office before it goes live, so you know the job is real and safe.</p></div>
+    <div class="step"><div class="n">2</div><h3>Claim your place</h3><p>Join with one tap. You get the meeting point, what to bring and a crew leader's contact. Under 18? We ask for a parent's OK for field work.</p></div>
+    <div class="step"><div class="n">3</div><h3>Show up, log hours</h3><p>The crew leader confirms attendance on the day. Your hours build into a certificate you can attach to university applications and CVs.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div>
+      <p class="eyebrow">Kauzat · Causes</p>
+      <h2>Five kinds of work, all over the municipality</h2>
+    </div>
+  </div>
+  <div class="causes" id="causes"></div>
+</section>
+
+<section id="raporto">
+  <div class="report">
+    <div>
+      <p class="eyebrow" style="color:var(--sun)">Raporto · Report a hotspot</p>
+      <h2 style="margin-top:10px">Seen something that needs fixing?</h2>
+      <p>Tell us where and what. The youth office reviews every report within a week and turns the good ones into actions on the map. Your report appears on the map as a dashed pin while it waits.</p>
+      <ul class="myreports" id="myreports"></ul>
+    </div>
+    <form id="reportForm" novalidate>
+      <label for="rUnit">Where
+        <select id="rUnit" required></select>
+      </label>
+      <label for="rCat">What kind
+        <select id="rCat" required></select>
+      </label>
+      <label class="full" for="rDesc">What's the problem
+        <textarea id="rDesc" required placeholder="e.g. Broken glass all over the basketball court behind the Shirgjan school"></textarea>
+      </label>
+      <label class="full" for="rName">Your first name (optional)
+        <input id="rName" type="text" autocomplete="given-name" placeholder="So the crew can thank you">
+      </label>
+      <p class="full formmsg" id="rMsg" aria-live="polite"></p>
+      <button class="btn sun full" type="submit">Send report</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div><strong style="color:var(--ink)">Elbasani Vepron</strong> · a youth engagement concept for Bashkia Elbasan</div>
+  <div class="mono">Sample hotspots · map is schematic, not to scale · <a href="admin.html">Youth office</a></div>
+</footer>
+</div>
+</body>
+</html>

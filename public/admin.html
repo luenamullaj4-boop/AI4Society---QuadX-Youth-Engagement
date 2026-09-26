@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Youth Office · Elbasani Vepron</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+<script type="module" src="js/admin.js"></script>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <a class="brand" href="./">
+    <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+      <rect x="1" y="1" width="32" height="32" rx="9" fill="var(--ink)"/>
+      <path d="M5 22 C11 18, 15 25, 21 20 S 27 17, 29 18" fill="none" stroke="var(--river-soft)" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="17" cy="12" r="5" fill="var(--sun)"/>
+    </svg>
+    Elbasani Vepron
+  </a>
+  <div class="navlinks"><a href="./">Back to the map</a></div>
+</nav>
+
+<section>
+  <div class="sec-head">
+    <div>
+      <p class="eyebrow">Zyra e rinisë · Youth office</p>
+      <h2>Review reports and crews</h2>
+      <p class="modepill" id="mode" aria-live="polite">Connecting…</p>
+    </div>
+    <p>Approve citizen reports to turn them into hotspots on the public map, and see who has signed up for each action.</p>
+  </div>
+
+  <form class="tokenbar" id="tokenForm">
+    <label for="token">Admin token
+      <input id="token" type="password" autocomplete="current-password" required>
+    </label>
+    <button class="btn" type="submit">Open the dashboard</button>
+  </form>
+  <p class="formerror" id="adminError" role="alert" hidden style="margin-top:12px"></p>
+</section>
+
+<div id="dashboard" hidden>
+  <section>
+    <div class="sec-head"><div><p class="eyebrow">Raportet · Reports</p><h2 id="pendingTitle">Waiting for review</h2></div></div>
+    <div class="admin-grid" id="reports"></div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <div><p class="eyebrow">Vullnetarët · Volunteers</p><h2>Sign-ups</h2></div>
+      <label for="signupFilter" class="filterrow">Action
+        <select id="signupFilter"><option value="">All actions</option></select>
+      </label>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Action</th><th>Name</th><th>Email</th><th>Age</th><th>Parent OK</th><th>Signed up</th></tr></thead>
+        <tbody id="signups"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div><strong style="color:var(--ink)">Elbasani Vepron</strong> · youth office dashboard</div>
+  <div class="mono">Volunteer contact details are personal data. Share them only with the crew leader.</div>
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "elbasani-vepron",
+  "version": "0.1.0",
+  "description": "Youth volunteering platform for Elbasan Municipality: a map of hotspots where volunteers can show up.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.12"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test"
+  }
+}
