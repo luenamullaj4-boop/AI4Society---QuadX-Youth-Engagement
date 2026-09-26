@@ -38,7 +38,7 @@ Safety is built in: volunteers aged 15–17 need a parent or guardian's agreemen
 
 ## Quick start
 
-You need [Node.js](https://nodejs.org) 20.12 or newer. There are **no npm dependencies** to install.
+You need [Node.js](https://nodejs.org) 22 or newer. There are **no npm dependencies** to install.
 
 ```bash
 git clone https://github.com/luenamullaj4-boop/AI4Society---QuadX-Youth-Engagement.git
@@ -119,7 +119,7 @@ The `public/` folder works on its own: without the server it switches to **demo 
 - **Front end:** HTML, CSS and vanilla JavaScript modules, [d3](https://d3js.org) for the map
 - **Back end:** Node.js built-in `http` module, JSON file storage
 - **Testing:** Node's built-in test runner
-- **CI/CD:** GitHub Actions (tests on Node 20 and 22, Pages deploy)
+- **CI/CD:** GitHub Actions (tests on Node 22 and 24, Pages deploy)
 
 ## Roadmap
 

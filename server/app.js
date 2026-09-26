@@ -140,7 +140,9 @@ export function createApp({ store, publicDir, adminToken = '', rateLimit = { max
     ['POST', /^\/api\/admin\/reports\/([\w-]+)\/approve$/, async (req, url, [id]) => {
       requireAdmin(req);
       const body = await readJson(req);
-      const fields = validateApproval(body, store.getReport(id));
+      const report = store.getReport(id);
+      if (report.status !== 'pending') throw new HttpError(409, `This report is already ${report.status}.`);
+      const fields = validateApproval(body, report);
       return [201, await store.approveReport(id, fields)];
     }],
 

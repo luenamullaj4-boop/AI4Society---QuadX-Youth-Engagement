@@ -7,7 +7,7 @@ import { openStore } from './store.js';
 const here = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(here, '..');
 
-// Load .env if present (Node 20.12+ / 22).
+// Load .env if present (Node 22+).
 try {
   process.loadEnvFile(join(rootDir, '.env'));
 } catch {

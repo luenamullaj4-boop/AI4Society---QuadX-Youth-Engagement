@@ -9,14 +9,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node: [20, 22]
+        node: [22, 24]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node }}
       - name: Check syntax
         run: for f in server/*.js public/js/*.js test/*.js; do node --check "$f"; done
       - name: Run tests
-        run: npm test
+        run: node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=tap --test-reporter-destination=test-results.tap
+      - name: Summarize failures
+        if: failure()
+        run: |
+          details=$(grep -A14 'not ok' test-results.tap | head -80 | sed ':a;N;$!ba;s/%/%25/g;s/\n/%0A/g')
+          echo "::error title=Failing tests::${details}"
