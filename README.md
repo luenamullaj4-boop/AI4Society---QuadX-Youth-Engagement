@@ -139,10 +139,10 @@ The hotspots in this repository are **sample data** written for the demo, and th
 
 | Name | Role |
 | --- | --- |
-| *add name* | *add role* |
-| *add name* | *add role* |
-| *add name* | *add role* |
-| *add name* | *add role* |
+| Denisa Muca | Team Lead |
+| Erlis Fortuzi | Business & Marketing Lead |
+| Luena Mullaj | Environmental & Impact Lead |
+
 
 ## License
 
